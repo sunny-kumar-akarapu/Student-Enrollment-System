@@ -1,0 +1,14 @@
+<h1>Editing user</h1>
+<% if @user.has_any_role? :Admin %>
+    <%return%> 
+<% elsif @user.has_any_role? :Instructor %>
+  <%= render "instructorForm", user: @user %>
+<% else %>
+  <%= render "form", user: @user %>
+<% end %>
+<br>
+
+<div>
+  <%= link_to "Show this user", @user %> |
+  <%= link_to "Back to users", users_path %>
+</div>

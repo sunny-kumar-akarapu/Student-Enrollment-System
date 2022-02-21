@@ -1,0 +1,40 @@
+<%= form_with(model: enrollment) do |form| %>
+  <% if enrollment.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(enrollment.errors.count, "error") %> prohibited this enrollment from being saved:</h2>
+
+      <ul>
+        <% enrollment.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <p id="notice"><%= notice %></p>
+
+  <% if current_user.has_role? :Student%>
+    <div>
+      <%= form.label :studentid, style: "display: block" %>
+      <%= current_user.id %>
+      <%= form.hidden_field :studentid, value: current_user.id %>
+    </div>
+  <% else %>
+    <div>
+      <%= form.label :studentid, style: "display: block" %>
+      <%= form.number_field :studentid %>
+    </div>
+  <% end %>
+
+    <div>
+      <%= form.label :courseid, style: "display: block" %>
+      <%= course.id %>
+      <%= form.hidden_field :courseid, value: course.id %>
+    </div>
+
+
+  <br>
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

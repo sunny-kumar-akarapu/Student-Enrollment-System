@@ -1,0 +1,64 @@
+<p style="color: green"><%= notice %></p>
+
+<% if current_user %>
+  <table class="table table-striped table-bordered table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th>Course ID</th>
+        <th>Course</th>
+        <th>Description</th>
+        <th>Instructor</th>
+        <th>Created_by</th>
+        <th>weekday1</th>
+        <th>weekday2</th>
+        <th>starttime</th>
+        <th>endtime</th>
+        <th>coursecode</th>
+        <th>capacity</th>
+        <th>WC</th>
+        <th>status</th>
+        <th>room</th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @courses.each do |course| %>
+        <tr>
+          <td><%= course.id %></td>
+          <td><%= link_to course.name, course_path(course) %></td>
+          <td><%= course.description %></td>
+          <td><%= course.instructorName %></td>
+          <td><%= course.user_id %></td>
+          <td><%= course.weekdayone %></td>
+          <td><%= course.weekdaytwo %></td>
+          <td><%= course.starttime %></td>
+          <td><%= course.endtime %></td>
+          <td><%= course.coursecode %></td>
+          <td><%= course.capacity %></td>
+          <td><%= course.waitlistcapacity %></td>
+          <td><%= course.status %></td>
+          <td><%= course.room %></td>
+          <td><%= link_to "Edit", edit_course_path(course) %></td>
+          <% if check_enrollment(course.id, current_user.id) %>
+          <td><%= link_to "Enroll", new_enrollment_path( :courseid => course.id,:current_user => current_user.id)%></td>
+          <% else %>
+          <td> <%= button_to "Drop", {:controller=>"courses", :action=>"delete_enrollment", :params=>{:courseid => course.id,:studentid => current_user.id} }%>
+          <% end %>
+          <% if (current_user.has_role? :Admin) || ((current_user.has_role? :Instructor) && course.user_id==current_user.id) %>
+        <td> <%= button_to "Destroy", {:controller=>"courses", :action=>"delete_course", :params=>{:courseid => course.id} }%>
+        <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+
+  <br>
+  <%= link_to 'New Course', new_course_path, class:"btn btn-secondary" %>
+<% else %>
+  <h1>Hello World!</h1>
+  No Courses yet...
+<% end %>

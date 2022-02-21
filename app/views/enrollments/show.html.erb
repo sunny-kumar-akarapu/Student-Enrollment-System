@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @enrollment %>
+
+<div>
+  <%
+=begin%>
+ <%= link_to "Edit this enrollment", edit_enrollment_path(@enrollment) %> | 
+<%
+=end%>
+  <%= link_to "Back to enrollments", enrollments_path %>
+  <br><br>
+  <%= button_to "Destroy this enrollment", @enrollment, method: :delete %>
+</div>

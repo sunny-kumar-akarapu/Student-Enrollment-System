@@ -1,0 +1,11 @@
+<h1>Confirm enrollment?</h1>
+
+<p id="notice"><%= notice %></p>
+
+<%= render "form", enrollment: @enrollment , course: @course%>
+
+<br>
+
+<div>
+  <%= link_to "Back to enrollments", enrollments_path %>
+</div>

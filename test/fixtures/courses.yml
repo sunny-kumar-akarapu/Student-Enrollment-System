@@ -1,0 +1,31 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyString
+  user_id: 1
+  instructorName: MyString
+  weekdayone: MyString
+  weekdaytwo: MyString
+  starttime: 2022-02-14 22:07:36
+  endtime: 2022-02-14 22:07:36
+  coursecode: MyString
+  capacity: 1
+  waitlistcapacity: 1
+  status: MyString
+  room: MyString
+
+two:
+  name: MyString
+  description: MyString
+  user_id: 1
+  instructorName: MyString
+  weekdayone: MyString
+  weekdaytwo: MyString
+  starttime: 2022-02-14 22:07:36
+  endtime: 2022-02-14 22:07:36
+  coursecode: MyString
+  capacity: 1
+  waitlistcapacity: 1
+  status: MyString
+  room: MyString

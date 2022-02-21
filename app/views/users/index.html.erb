@@ -1,0 +1,52 @@
+<p style="color: green"><%= notice %></p>
+
+
+<% if current_user %>
+  <table class="table table-striped table-bordered table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th>User ID</th>
+        <th>Email</th>
+        <th>Name</th>
+        <th>DOB</th>
+        <th>Number</th>
+        <th>Major</th>
+        <th>Department</th>
+        <th>Role </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @users.each do |user| %>
+        <% if (current_user.has_role? :Instructor) && (user.has_any_role? :Admin, :Instructor) %>
+          <% next %>
+        <% else %>
+          <tr>
+            <td><%= user.id %></td>
+            <td><%= link_to user.email, user_path(user) %></td>
+            <td><%= user.name %></td>
+            <td><%= user.dob %></td>
+            <td><%= user.number %></td>
+            <td><%= user.major %></td>
+            <td><%= user.department %></td>
+            <td><%= user.roles.pluck(:name) %></td>
+            <% if user.has_any_role? :Student %>
+              <td><%= link_to "Edit", edit_user_path(user) %></td>
+            <% elsif user.has_any_role? :Admin %>
+              <td><%= link_to "Edit", edit_user_path(user) %></td>
+            <% elsif user.has_any_role? :Instructor %>
+              <td><%= link_to "Edit", edit_user_path(user) %></td>
+            <% end %>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+  <br>
+  <%= link_to 'New User', new_user_path, class:"btn btn-secondary" %>
+<% else %>
+  <h1>Hello World!</h1>
+  No users yet...
+<% end %> 
+
+

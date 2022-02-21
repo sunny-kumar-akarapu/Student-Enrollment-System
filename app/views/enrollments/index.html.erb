@@ -1,0 +1,177 @@
+<p id="notice"><%= notice %></p>
+
+
+<% if current_user.has_any_role? :Admin %>
+  <h1>Enrollments</h1>
+  <table class="table table-striped table-bordered table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th>Student ID</th>
+        <th>Student Name</th>
+        <th>Course ID</th> 
+        <th>Course</th> 
+        <th>Instructor</th> 
+        <th>Enrollment Status</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @enrollments.each do |enrollment| %>
+        <tr>
+          <% course = Course.find(enrollment.courseid) %>
+          <% user = User.find(enrollment.studentid) %>
+          <td> <%= enrollment.studentid %> </td>
+          <td> <%= user.name %></td>
+          <td> <%= enrollment.courseid %> </td>
+          <td> <%= course.name %></td>
+          <td> <%= course.instructorName %></td>
+          <td> <%= enrollment.enrollmentstatus %> </td>
+          <td><%= link_to "Show this enrollment", enrollment%></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <br>
+<% end %> 
+
+
+<% if current_user.has_role? :Instructor %>
+  <h1>ACCEPTED Enrollments in courses offered by you </h1>
+  <table class="table table-striped table-bordered table-hover">
+    <thead class="thead-dark">
+      <tr> 
+        <th>Student ID</th> 
+        <th>Student Name</th> 
+        <th>Course ID</th> 
+        <th>Course</th> 
+        <th>Instructor</th> 
+        <th>Enrollment Status</th> 
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @enrollments.each do |enrollment| %>
+          <tr>
+            <% course = Course.find(enrollment.courseid) %> 
+            <% user = User.find(enrollment.studentid) %>
+            <% if (current_user.has_role? :Instructor) && ( course.instructorName == current_user.name ) && (enrollment.enrollmentstatus == "ACCEPTED")%>
+              <td> <%= enrollment.studentid %> </td> 
+              <td> <%= user.name %></td> 
+              <td> <%= enrollment.courseid %> </td> 
+              <td> <%= course.name %></td> 
+              <td> <%= course.instructorName %></td> 
+              <td> <%= enrollment.enrollmentstatus %> </td> 
+              <td><%= link_to "Show this enrollment", enrollment%></td> 
+            <% end %>
+          </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <br>
+
+  <h1>WAITLIST Enrollments in courses offered by you </h1>
+  <table class="table table-striped table-bordered table-hover">
+    <thead class="thead-dark">
+      <tr> 
+        <th>Student ID</th> 
+        <th>Student Name</th> 
+        <th>Course ID</th> 
+        <th>Course</th> 
+        <th>Instructor</th> 
+        <th>Enrollment Status</th> 
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @enrollments.each do |enrollment| %>
+          <tr>
+            <% course = Course.find(enrollment.courseid) %> 
+            <% user = User.find(enrollment.studentid) %>
+            <% if (current_user.has_role? :Instructor) && ( course.instructorName == current_user.name ) && (enrollment.enrollmentstatus == "WAITLIST")%>
+              <td> <%= enrollment.studentid %> </td> 
+              <td> <%= user.name %></td> 
+              <td> <%= enrollment.courseid %> </td> 
+              <td> <%= course.name %></td> 
+              <td> <%= course.instructorName %></td> 
+              <td> <%= enrollment.enrollmentstatus %> </td> 
+              <td><%= link_to "Show this enrollment", enrollment%></td> 
+            <% end %>
+          </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <br>
+
+<% end %> 
+
+
+<% if current_user.has_role? :Student %>
+  <h1>ACCPETED courses </h1>
+  <table class="table table-striped table-bordered table-hover">
+    <thead class="thead-dark">
+      <tr> 
+        <th>Student ID</th> 
+        <th>Student Name</th> 
+        <th>Course ID</th> 
+        <th>Course</th> 
+        <th>Instructor</th> 
+        <th>Enrollment Status</th> 
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @enrollments.each do |enrollment| %>
+        <tr>
+          <% course = Course.find(enrollment.courseid) %> 
+          <% user = User.find(enrollment.studentid) %>
+          <% if ( enrollment.studentid == current_user.id ) && (enrollment.enrollmentstatus == "ACCEPTED") %>
+            <td> <%= enrollment.studentid %> </td> 
+            <td> <%= user.name %></td> 
+            <td> <%= enrollment.courseid %> </td> 
+            <td> <%= course.name %></td> 
+            <td> <%= course.instructorName %></td> 
+            <td> <%= enrollment.enrollmentstatus %> </td> 
+            <td><%= link_to "Show this enrollment", enrollment%></td> 
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <br>
+
+  <h1>WAITLIST courses</h1>
+  <table class="table table-striped table-bordered table-hover">
+    <thead class="thead-dark">
+      <tr> 
+        <th>Student ID</th> 
+        <th>Student Name</th> 
+        <th>Course ID</th> 
+        <th>Course</th> 
+        <th>Instructor</th> 
+        <th>Enrollment Status</th> 
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @enrollments.each do |enrollment| %> 
+        <tr> 
+          <% course = Course.find(enrollment.courseid) %> 
+          <% user = User.find(enrollment.studentid) %> 
+          <% if ( enrollment.studentid == current_user.id ) && (enrollment.enrollmentstatus == "WAITLIST") %> 
+            <td> <%= enrollment.studentid %> </td> 
+            <td> <%= user.name %></td> 
+            <td> <%= enrollment.courseid %> </td> 
+            <td> <%= course.name %></td> 
+            <td> <%= course.instructorName %></td> 
+            <td> <%= enrollment.enrollmentstatus %> </td> 
+            <td><%= link_to "Show this enrollment", enrollment%></td> 
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <br>
+
+
+<% end %> 

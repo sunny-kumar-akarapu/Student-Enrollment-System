@@ -1,0 +1,89 @@
+<%= form_with(model: course) do |form| %>
+  <% if course.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(course.errors.count, "error") %> prohibited this course from being saved:</h2>
+
+      <ul>
+        <% course.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, style: "display: block" %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :description, style: "display: block" %>
+    <%= form.text_field :description %>
+  </div>
+
+  <div>
+    <%= form.label :coursecode, style: "display: block" %>
+    <%= form.text_field :coursecode %>
+  </div>
+
+  <div>
+    <%= form.number_field :user_id,value: current_user.id , type: :hidden %>
+  </div>
+  
+  <% if current_user.has_role? :Admin%>
+    <div>
+      <%= form.label :instructorID, style: "display: block" %>
+      <%= form.text_field :instructorName %>
+    </div>
+  <% elsif current_user.has_role? :Instructor%>
+    <div>
+      <% form.label :instructorName, style: "display: block" %>
+      <% form.text_field :instructorName, type: :hidden %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :weekdayone, style: "display: block" %>
+    <%= form.text_field :weekdayone %>
+  </div>
+
+  <div>
+    <%= form.label :weekdaytwo, style: "display: block" %>
+    <%= form.text_field :weekdaytwo %>
+  </div>
+
+  <div>
+    <%= form.label :starttime, style: "display: block" %>
+    <%= form.time_field :starttime %>
+  </div>
+
+  <div>
+    <%= form.label :endtime, style: "display: block" %>
+    <%= form.time_field :endtime %>
+  </div>
+
+  
+  <div>
+    <%= form.label :capacity, style: "display: block" %>
+    <%= form.number_field :capacity %>
+  </div>
+
+  <div>
+    <%= form.label :waitlistcapacity, style: "display: block" %>
+    <%= form.number_field :waitlistcapacity %>
+  </div>
+
+  <div>
+    <% form.label :status, style: "display: block" %>
+    <% form.text_field :status, type: :hidden %>
+  </div>
+
+  <div>
+    <%= form.label :room, style: "display: block" %>
+    <%= form.text_field :room %>
+  </div>
+  <br>
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

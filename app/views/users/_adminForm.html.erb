@@ -1,0 +1,63 @@
+<%= form_with(model: user) do |form| %>
+  <% if user.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+      <ul>
+        <% user.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+<% if current_user.has_role? :Admin %>
+  <div>
+    <%= form.label :email, style: "display: block" %>
+    <%= current_user.email %>
+    <% form.text_field :email , type: "email"%> 
+  </div>
+
+  <div>
+    <% form.label :password, style: "display: block" %>
+    <% form.password_field :password , pattern: "[a-zA-Z0-9!@#$%^&*]{6,16}" %>
+  </div>
+
+  <div>
+    <% form.label :password_confirmation, style: "display: block" %>
+    <% form.password_field :password_confirmation %>
+  </div>
+
+  <div>
+    <%= form.label :name, style: "display: block" %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <% form.label :department, style: "display: block" %>
+    <% form.text_field :department %>
+  </div>
+
+  <div>
+    <% form.label :number, style: "display: block" %>
+    <% form.text_field :number , type: "number" %>
+  </div>
+
+  <div>
+    <% form.label :dob, style: "display: block" %>
+    <% form.date_field :dob %>
+  </div>
+
+  <div>
+    <% form.label :major, style: "display: block" %>
+    <% form.text_field :major %>
+  </div>
+
+
+  <%= form.collection_check_boxes :role_ids, Role.all, :id, :name %> 
+
+  <br>
+  <div>
+    <%= form.submit %>
+  </div>
+<%end%>
+<% end %>
