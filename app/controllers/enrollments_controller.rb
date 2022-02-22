@@ -31,7 +31,7 @@ class EnrollmentsController < ApplicationController
         if id == current_user.id
         end
       end
-    elsif current_user.has_any_role? :Admin,:Instructor
+    elsif current_user.has_any_role? :Instructor
       if (current_user.id != Course.find(params[:courseid]).user_id)
         user_not_authorized
 
@@ -41,6 +41,12 @@ class EnrollmentsController < ApplicationController
           @course = Course.find(params[:courseid])
         end
       end
+    elsif current_user.has_any_role? :Admin
+      @enrollment = Enrollment.new
+      if @course.nil?
+        @course = Course.find(params[:courseid])
+      end
+
     else
       user_not_authorized
     end
