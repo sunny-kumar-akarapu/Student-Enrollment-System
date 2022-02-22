@@ -1,5 +1,8 @@
 Role.destroy_all
 User.delete_all
+Course.delete_all
+Enrollment.delete_all
+
 Role.create!([{
   id: 1,
   name: "Admin"
