@@ -16,6 +16,11 @@ class EnrollmentsController < ApplicationController
 
   # GET /enrollments/1 or /enrollments/1.json
   def show
+    if ((current_user.has_any_role? :Student) && (current_user.id != @enrollment.studentid))
+      flash[:notice] = "You are not authorized to perform this action."
+      redirect_to( courses_path )
+      return
+    end
   end
 
 
@@ -34,7 +39,6 @@ class EnrollmentsController < ApplicationController
     elsif current_user.has_any_role? :Instructor
       if (current_user.id != Course.find(params[:courseid]).user_id)
         user_not_authorized
-
       else
         @enrollment = Enrollment.new
         if @course.nil?
@@ -46,15 +50,18 @@ class EnrollmentsController < ApplicationController
       if @course.nil?
         @course = Course.find(params[:courseid])
       end
-
     else
       user_not_authorized
     end
-
   end
 
   # GET /enrollments/1/edit
   def edit
+    if ((current_user.has_any_role? :Student) && (current_user.id != @enrollment.studentid))
+      flash[:notice] = "You are not authorized to perform this action."
+      redirect_to( courses_path )
+      return
+    end
   end
 
   def drop
@@ -116,29 +123,41 @@ class EnrollmentsController < ApplicationController
 
   # PATCH/PUT /enrollments/1 or /enrollments/1.json
   def update
-    respond_to do |format|
-      if @enrollment.update(enrollment_params)
-        format.html { redirect_to enrollment_url(@enrollment), notice: "Enrollment was successfully updated." }
-        format.json { render :show, status: :ok, location: @enrollment }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @enrollment.errors, status: :unprocessable_entity }
+    if ((current_user.has_any_role? :Student) && (current_user.id != @enrollment.studentid))
+      flash[:notice] = "You are not authorized to perform this action."
+      redirect_to( courses_path )
+      return
+    else
+      respond_to do |format|
+        if @enrollment.update(enrollment_params)
+          format.html { redirect_to enrollment_url(@enrollment), notice: "Enrollment was successfully updated." }
+          format.json { render :show, status: :ok, location: @enrollment }
+        else
+          format.html { render :edit, status: :unprocessable_entity }
+          format.json { render json: @enrollment.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
 
   # DELETE /enrollments/1 or /enrollments/1.json
   def destroy
-    tempcid = @enrollment.courseid
-    tempid = @enrollment.id
-    @enrollment.destroy
-    respond_to do |format|
-      format.html { redirect_to enrollments_url, notice: "Enrollment was successfully destroyed." }
-      format.json { head :no_content }
+    if ((current_user.has_any_role? :Student) && (current_user.id != @enrollment.studentid))
+      flash[:notice] = "You are not authorized to perform this action."
+      redirect_to( courses_path )
+      return
+    else
+      tempcid = @enrollment.courseid
+      tempid = @enrollment.id
+      @enrollment.destroy
+      respond_to do |format|
+        format.html { redirect_to enrollments_url, notice: "Enrollment was successfully destroyed." }
+        format.json { head :no_content }
+      end
+      @course = Course.find(@enrollment.courseid)
+      Enrollment.where(:courseid => @enrollment.courseid).order(:created_at).limit(@course.capacity).update_all(enrollmentstatus: 'ACCEPTED')
+      Enrollment.where(:courseid => @enrollment.courseid).where.not(:enrollmentstatus => 'ACCEPTED').order(:created_at).limit(@course.waitlistcapacity).update_all(enrollmentstatus: 'WAITLIST')
     end
-    @course = Course.find(@enrollment.courseid)
-    Enrollment.where(:courseid => @enrollment.courseid).order(:created_at).limit(@course.capacity).update_all(enrollmentstatus: 'ACCEPTED')
-    Enrollment.where(:courseid => @enrollment.courseid).where.not(:enrollmentstatus => 'ACCEPTED').order(:created_at).limit(@course.waitlistcapacity).update_all(enrollmentstatus: 'WAITLIST')
   end
 
   private
