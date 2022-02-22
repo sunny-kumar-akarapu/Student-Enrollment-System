@@ -5,7 +5,7 @@ class User < ApplicationRecord
   validates :name, presence: true
   validates :department, presence: true
 
-  has_many :courses
+  has_many :courses, dependent: :destroy
   has_many :enrollments
 
   after_create :assign_default_role
