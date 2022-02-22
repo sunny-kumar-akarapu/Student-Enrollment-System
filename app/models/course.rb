@@ -7,7 +7,13 @@ class Course < ApplicationRecord
     validates :starttime,presence: true
     validates :endtime ,presence: true
     validate :endtime_is_after_starttime
+    validates :weekdayone ,presence: true
+    validate :check_weekdayone_and_weekdaytwo
 
+    def check_weekdayone_and_weekdaytwo
+    errors.add(:weekdaytwo, "can't be the same as weekdayone") if weekdayone == weekdaytwo
+    end
+    
     validates :coursecode,uniqueness: true,format: { with: /[A-Z]{3}[0-9]{3}/,
     message: "course code is not according to the format" }
     validates :capacity,presence: true
