@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :courses
   root 'home#index'
   get 'error', to: "home#error"
+  post "users/delete_user" => "users#delete_user"
   post "courses/delete_enrollment" => "courses#delete_enrollment"
   post "courses/delete_course" => "courses#delete_course"
   get 'enrollments/enrollmentrequest' => 'enrollments#enrollmentrequest'
