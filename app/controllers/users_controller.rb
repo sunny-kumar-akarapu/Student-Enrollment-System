@@ -55,7 +55,36 @@ class UsersController < ApplicationController
       return
     end
   end 
+  def delete_user()
+    if params[:role]==["Admin"]
+      user_not_authorized
+      return
+    elsif params[:role]==["Instructor"]
+      if User.where(:id => params[:user_id]).exists?
+        User.where(:id => params[:user_id]).destroy_all
+        @course_query = Course.where(:user_id => params[:user_id])
+        @course_list = []
 
+        @course_query.each do |course|
+          @course_list.append(course.id)
+        end
+        Enrollment.where(:courseid => @course_list).destroy_all
+        Course.where(:user_id => params[:user_id]).destroy_all
+        
+
+      end
+
+    elsif params[:role]==["Student"]
+      if User.where(:id => params[:user_id]).exists?
+        Enrollment.where(:studentid => params[:user_id]).destroy_all
+        User.where(:id => params[:user_id]).destroy_all
+        
+      end
+    else
+      user_not_authorized
+    end
+    redirect_back(fallback_location: users_path)
+  end
   def editInstructor
     if ((current_user.has_any_role? :Student,:Admin,:Instructor) && (current_user.id != @user.id))
       flash[:notice] = "You are not authorized to perform this action."
@@ -148,4 +177,6 @@ class UsersController < ApplicationController
     def user_params
       params.require(:user).permit(:email, :password, :password_confirmation, :name, :department, :number, :dob, :major, {role_ids: []})
     end
+  helper_method :delete_user
+  
 end
