@@ -37,6 +37,7 @@
             <% elsif user.has_any_role? :Instructor %>
               <td><%= link_to "Edit", edit_user_path(user) %></td>
             <% end %>
+            <td> <%= button_to "Destroy", {:controller=>"users", :action=>"delete_user", :params=>{:user_id => user.id, :role => user.roles.pluck(:name)}}%>
           </tr>
         <% end %>
       <% end %>
