@@ -19,8 +19,10 @@
     <tbody>
       <% @enrollments.each do |enrollment| %>
         <tr>
+        <% if Course.exists?(enrollment.courseid) %>
           <% course = Course.find(enrollment.courseid) %>
           <% user = User.find(enrollment.studentid) %>
+          
           <td> <%= enrollment.studentid %> </td>
           <td> <%= user.name %></td>
           <td> <%= enrollment.courseid %> </td>
@@ -28,6 +30,7 @@
           <td> <%= course.instructorName %></td>
           <td> <%= enrollment.enrollmentstatus %> </td>
           <td><%= link_to "Show this enrollment", enrollment%></td>
+        <% end %>
         </tr>
       <% end %>
     </tbody>
